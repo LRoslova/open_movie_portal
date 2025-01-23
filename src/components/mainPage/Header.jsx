@@ -33,7 +33,7 @@ export const Header = () => {
         
         <div className="demo-logo">
           <Image
-          width={100}
+          width={50}
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
         />
         </div>/
