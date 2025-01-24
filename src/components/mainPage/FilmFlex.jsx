@@ -67,21 +67,19 @@ export const FilmFlex = () => {
             </Space>
             
             <Flex wrap gap="small">
-                {data.map(
-                    // {
-                    //     length: 12,
-                    // },
-                    (i) => (
+                {Array.from(
+                    data,
+                    (_, i) => (
                         <Card
                             key={data[i].id}
                             hoverable
                             style={{
                                 width: 240,
                             }}
-                            cover={<img alt="example" src= 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fhudognik.net%2Fpictures%2F54538-Kotik%2F&psig=AOvVaw1_Z8opL2tlLEZf3JPao_wK&ust=1737745418670000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNifq6fEjIsDFQAAAAAdAAAAABAE' />}
+                            cover={<img alt="example" src= {data[i].poster.url} />}
 
                         >
-                            <Meta title={data[i].name} description={`Жанр: ${data[i].genres[0].name}`} />
+                            <Meta title={data[i].name} description={`Жанр: ${data[i].genres[0].name} Страна: ${data[i].countries[0].name}  Год: ${data[i].year}`} />
                         </Card>
                     ),
                 )}
