@@ -2,6 +2,7 @@ import React from 'react';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { FilmFlex } from './components/mainPage/FilmFlex';
 import { Header } from './components/mainPage/Header';
+import { MovieItem } from './components/favoritesPage/MovieItem';
 
 const {  Content, Footer } = Layout;
 
@@ -46,6 +47,27 @@ export const App = () => {
         >
             Content
             <FilmFlex/>
+
+            <MovieItem movie = {{
+        "id": 6994027,
+        "name": "Проливной дождь",
+        "year": 2023,
+        "movieLength": 137,
+        "poster": {
+          "url": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/orig",
+          "previewUrl": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/x1000"
+        },
+        "genres": [
+          {
+            "name": "драма"
+          }
+        ],
+        "countries": [
+          {
+            "name": "Япония"
+          }
+        ]
+      }} ></MovieItem>
 
 
           
