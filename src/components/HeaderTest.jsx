@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {HeartOutlined, HomeOutlined, LoginOutlined, UserOutlined} from '@ant-design/icons';
-import { Menu } from 'antd';
-import {Link, } from 'react-router-dom'
+import { Badge, Menu } from 'antd';
+import {Link, useNavigate, } from 'react-router-dom'
 
 
 const items = [
@@ -13,7 +13,7 @@ const items = [
   {
     label: (<Link to = '/favorites'> Избранное </Link>),
     key: 'favorites',
-    icon: <HeartOutlined />,
+    icon: <Badge count = {0} size='small' showZero><HeartOutlined /></Badge>,
   },
   {
     label: (<Link to = '/login'> Войти </Link>),
@@ -25,6 +25,7 @@ const items = [
 
 export const HeaderTest = () => {
     const [current, setCurrent] = useState('home');
+    
     const onClick = (e) => {
         console.log('click ', e);
         setCurrent(e.key);

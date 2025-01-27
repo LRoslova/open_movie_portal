@@ -2,10 +2,12 @@ import React from 'react';
 import { Layout, Menu, theme } from 'antd';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 import { HeaderTest } from './components/HeaderTest';
+
 import { Home } from './pages/Home';
 import { Favorites } from './pages/Favorites';
-
+import { Authorization } from './pages/Authorization';
 
 
 
@@ -20,28 +22,29 @@ export const App = () => {
   return (
     <BrowserRouter>
 
-      <Layout>
+      <Layout >
 
         <HeaderTest />
 
         <Content
           style={{
             padding: '0 48px',
+            height: '91.7vh',
           }}
         >
           <div
             style={{
               background: colorBgContainer,
-              minHeight: 280,
+              minHeight: '280',
               padding: 24,
               borderRadius: borderRadiusLG,
             }}
           >
 
             <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/favorites' element={<Favorites />} />
-
+              <Route exact path='/' element={<Home />} />
+              <Route exact path='/favorites' element={<Favorites />} />
+              <Route exact path='/login' element={<Authorization />} />
             </Routes>
 
           </div>
