@@ -18,7 +18,7 @@ const onSearch = (value, _e, info) => console.log(info?.source, value);
 const { Meta } = Card;
 
 
-export const FilmFlex = () => {
+export const Home = () => {
 
     const [ data, setData] = useState([{
         "id": 6994027,
@@ -41,23 +41,23 @@ export const FilmFlex = () => {
         ]
       }]);
 
-    useEffect(() => {
-        fetch(`https://api.kinopoisk.dev/v1.4/movie?page=2&limit=12&selectFields=id&selectFields=name&selectFields=year&selectFields=movieLength&selectFields=genres&selectFields=countries&selectFields=poster&notNullFields=id&notNullFields=name&notNullFields=year&notNullFields=movieLength&notNullFields=poster.url&notNullFields=genres.name&notNullFields=countries.name&sortField=&sortType=1&type=movie&year=2020-2024`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                'X-API-KEY': '1676QMC-5HRMB52-KGRA9G2-V1SWGC6'
-            }
-        })
-        .then( res => res.json())
-        .then(
-            (result) => {
-                setData(result.docs);
-                console.log(result.docs);
-            },
-            (e) => console.warn('fetch failrue', e)
-        )
-    }, [])
+    // useEffect(() => {
+    //     fetch(`https://api.kinopoisk.dev/v1.4/movie?page=2&limit=12&selectFields=id&selectFields=name&selectFields=year&selectFields=movieLength&selectFields=genres&selectFields=countries&selectFields=poster&notNullFields=id&notNullFields=name&notNullFields=year&notNullFields=movieLength&notNullFields=poster.url&notNullFields=genres.name&notNullFields=countries.name&sortField=&sortType=1&type=movie&year=2020-2024`, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             'X-API-KEY': '1676QMC-5HRMB52-KGRA9G2-V1SWGC6'
+    //         }
+    //     })
+    //     .then( res => res.json())
+    //     .then(
+    //         (result) => {
+    //             setData(result.docs);
+    //             console.log(result.docs);
+    //         },
+    //         (e) => console.warn('fetch failrue', e)
+    //     )
+    // }, [])
 
     
     return (

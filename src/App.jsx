@@ -1,54 +1,71 @@
 import React from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { FilmFlex } from './components/mainPage/FilmFlex';
-import { Header } from './components/mainPage/Header';
-import { MovieItem } from './components/favoritesPage/MovieItem';
+import { Layout, Menu, theme } from 'antd';
 
-const {  Content, Footer } = Layout;
-
-
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HeaderTest } from './components/HeaderTest';
+import { Home } from './pages/Home';
+import { Favorites } from './pages/Favorites';
 
 
-// const items = new Array(15).fill(null).map((_, index) => ({
-//   key: index + 1,
-//   label: `nav ${index + 1}`,
-// }));
+
+
+
+const { Content, Footer } = Layout;
+
 export const App = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
   return (
-    <Layout>
-      
-      <Header/>
+    <BrowserRouter>
 
-      <Content
-        style={{
-          padding: '0 48px',
-        }}
-      >
-        {/* <Breadcrumb
+      <Layout>
+
+        <HeaderTest />
+
+        <Content
           style={{
-            margin: '16px 0',
+            padding: '0 48px',
           }}
         >
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb> */}
-        <div
+          <div
+            style={{
+              background: colorBgContainer,
+              minHeight: 280,
+              padding: 24,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/favorites' element={<Favorites />} />
+
+            </Routes>
+
+          </div>
+
+        </Content>
+
+        <Footer
           style={{
-            margin: '20px 0',
-            background: colorBgContainer,
-            minHeight: 280,
-            padding: 24,
-            borderRadius: borderRadiusLG,
+            textAlign: 'center',
           }}
         >
-            Content
-            <FilmFlex/>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
 
-            <MovieItem movie = {{
+      </Layout>
+
+    </BrowserRouter>
+  );
+}
+  
+
+
+
+{/* <MovieItem movie = {{
         "id": 6994027,
         "name": "Проливной дождь",
         "year": 2023,
@@ -67,26 +84,4 @@ export const App = () => {
             "name": "Япония"
           }
         ]
-      }} ></MovieItem>
-
-
-          
-        </div>
-      </Content>
-
-
-
-
-
-      
-      <Footer
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
-      </Footer>
-    </Layout>
-  );
-};
-
+      }} ></MovieItem> */}

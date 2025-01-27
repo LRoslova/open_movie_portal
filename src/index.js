@@ -8,8 +8,10 @@ import { store } from './store/store';
 
 
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+
   <ConfigProvider
     theme={{
       algorithm: theme.darkAlgorithm,
@@ -23,10 +25,10 @@ root.render(
       }
     }}
   >
+      
     <Provider store={store}>
-      <App />
+      <App/>
     </Provider>
-    
     
   </ConfigProvider>
 
