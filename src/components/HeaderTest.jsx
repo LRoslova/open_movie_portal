@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {HeartOutlined, HomeOutlined, LoginOutlined, UserOutlined, LogoutOutlined} from '@ant-design/icons';
 import { Badge, Button, Menu } from 'antd';
 import {Link, useNavigate, } from 'react-router-dom'
 import { useUser } from './hooks/useUser';
 import { useActionsUser } from './hooks/useActionsUser';
+
 
 
 
@@ -15,14 +16,27 @@ export const HeaderTest = () => {
   // const [isLoggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('isLoggedIn')));
   // console.log(isLoggedIn);
   
-
+ const navigate = useNavigate();
+ 
   const state = useUser();
   console.log(state);
   const {setUser} = useActionsUser();
 
   const onClick = (e) => {
-    // console.log('click ', e);
+    console.log('click ', e);
     setCurrent(e.key);
+  };
+ 
+
+  // useEffect(()=>{
+  //     navigate('/')
+  // }, [setCurrent])
+
+  const userIsExit = () => {
+    console.log('exit lk');
+    setUser('');
+    setCurrent('home')
+    navigate('/')
   };
 
 
@@ -39,17 +53,18 @@ export const HeaderTest = () => {
     },
     {
       label: (
-        state!="" ? JSON.parse(localStorage.getItem(state)).nickname :<Link to='/login'> Войти </Link>
+        state!="" ? JSON.parse(localStorage.getItem(state)).nickname : <Link to='/login'> Войти </Link>
       ),
       key: 'login',
       icon: state!="" ? <UserOutlined />: <LoginOutlined /> ,
+      disabled: state!="" ? true : false
     },
     // {
     //   label: (
-    //     state!="" ? <Button onClick={userIsExit()}>  Выйти </Button> : <div></div>
+    //     state!="" ? <Button onClick={userIsExit}> <LogoutOutlined /> Выйти </Button> : <div></div>
     //   ),
     //   key: 'logout',
-    //   icon: state!="" ? <LogoutOutlined /> : <div></div> ,
+    //   // icon: state!="" ?  : <div></div> ,
     // }
   ];
 
@@ -66,7 +81,7 @@ export const HeaderTest = () => {
         minWidth: 0,
       }}
         onClick={onClick} selectedKeys={[current]} mode="horizontal" theme="dark" items={items} />
-        {/* {state == "" ? null : <Button onClick={userIsExit()}> <LogoutOutlined /> Выйти </Button>} */}
+        {state == "" ? null : <Button onClick={userIsExit}> <LogoutOutlined /> Выйти </Button>}
     </div>
 
   );

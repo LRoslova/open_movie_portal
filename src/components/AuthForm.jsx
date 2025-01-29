@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AutoComplete,
   Button,
@@ -51,28 +51,27 @@ const tailFormItemLayout = {
 export const AuthForm = () => {
   const [form] = Form.useForm();
 
-  const state = useUser();
+  const user = useUser();
   
-  console.log(state);
+  console.log(user);
   const {setUser} = useActionsUser();
 
   const navigate = useNavigate()
 
-
-
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
     let login = values.email;
-    let user = {
+    let userObj = {
       nickname: values.nickname,
       password: values.password,
+      email: values.email,
       favorites: []
     }
-    localStorage.setItem(login, JSON.stringify(user));
-    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem(login, JSON.stringify(userObj));
     setUser(login);
-    // console.log(state);
-    // navigate('/user');
+    alert('You are registrated!')
+    // localStorage.setItem('currentUser', login);
+    // navigate('/user')
   };
 
   

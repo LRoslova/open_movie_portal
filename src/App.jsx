@@ -19,6 +19,8 @@ export const App = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  // localStorage.clear();
+  localStorage.setItem('currentUser', '');
 
   
 

@@ -1,15 +1,41 @@
 import { Button, Checkbox, Form, Input } from 'antd';
+import { useUser } from './hooks/useUser';
+import { useActionsUser } from './hooks/useActionsUser';
+import { useNavigate } from 'react-router-dom';
 
-const onFinish = (values) => {
-  console.log('Success:', values);
-};
+
+
 
 const onFinishFailed = (errorInfo) => {
   console.log('Failed:', errorInfo);
 };
 
-export const LoginForm = () => (
-  <Form
+export const LoginForm = () => {
+  const user = useUser();
+
+  const onFinish = (values) => {
+  console.log('Success:', values);
+  let password = values.password;
+  let login = values.email;
+  let localUser = JSON.parse(localStorage.getItem(login));
+  console.log(localUser);
+  if(localUser !== null){
+    if(password == localUser.password){
+      setUser(login);
+    }else{
+      alert('Password is incorrect!')
+    }
+  }else{
+    alert('Email is incorrect!')
+  }
+  
+
+};
+  console.log(user);
+  const {setUser} = useActionsUser();
+
+
+  return <Form
     name="basic"
     labelCol={{
       span: 8,
@@ -29,7 +55,7 @@ export const LoginForm = () => (
   >
     <Form.Item
       label="Логин"
-      name="username"
+      name="email"
       rules={[
         {
           required: true,
@@ -59,4 +85,5 @@ export const LoginForm = () => (
       </Button>
     </Form.Item>
   </Form>
-);
+}
+
