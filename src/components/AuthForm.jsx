@@ -14,6 +14,8 @@ import {
 import { useUser } from './hooks/useUser';
 import { useActionsUser } from './hooks/useActionsUser';
 import { useNavigate } from 'react-router-dom';
+import { useMenu } from './hooks/useMenu';
+import { useActionsMenu } from './hooks/useActionsMenu';
 
 const { Option } = Select;
 
@@ -55,6 +57,8 @@ export const AuthForm = () => {
   
   console.log(user);
   const {setUser} = useActionsUser();
+  const page = useMenu();
+  const {setPage} = useActionsMenu();
 
   const navigate = useNavigate()
 
@@ -70,6 +74,8 @@ export const AuthForm = () => {
     localStorage.setItem(login, JSON.stringify(userObj));
     setUser(login);
     alert('You are registrated!')
+    setPage('home')
+    navigate('/')
     // localStorage.setItem('currentUser', login);
     // navigate('/user')
   };

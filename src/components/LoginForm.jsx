@@ -2,6 +2,8 @@ import { Button, Checkbox, Form, Input } from 'antd';
 import { useUser } from './hooks/useUser';
 import { useActionsUser } from './hooks/useActionsUser';
 import { useNavigate } from 'react-router-dom';
+import { useMenu } from './hooks/useMenu';
+import { useActionsMenu } from './hooks/useActionsMenu';
 
 
 
@@ -12,6 +14,9 @@ const onFinishFailed = (errorInfo) => {
 
 export const LoginForm = () => {
   const user = useUser();
+  const page = useMenu();
+  const {setPage} = useActionsMenu();
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
   console.log('Success:', values);
@@ -22,6 +27,8 @@ export const LoginForm = () => {
   if(localUser !== null){
     if(password == localUser.password){
       setUser(login);
+      setPage('home')
+      navigate('/')
     }else{
       alert('Password is incorrect!')
     }

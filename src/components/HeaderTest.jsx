@@ -4,6 +4,8 @@ import { Badge, Button, Menu } from 'antd';
 import {Link, useNavigate, } from 'react-router-dom'
 import { useUser } from './hooks/useUser';
 import { useActionsUser } from './hooks/useActionsUser';
+import { useMenu } from './hooks/useMenu';
+import { useActionsMenu } from './hooks/useActionsMenu';
 
 
 
@@ -12,19 +14,21 @@ import { useActionsUser } from './hooks/useActionsUser';
 // isLoggedIn ? 
 
 export const HeaderTest = () => {
-  const [current, setCurrent] = useState('home');
+  // const [current, setCurrent] = useState('home');
   // const [isLoggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('isLoggedIn')));
   // console.log(isLoggedIn);
+  const page = useMenu();
+  const {setPage} = useActionsMenu();
   
  const navigate = useNavigate();
- 
+
   const state = useUser();
   console.log(state);
   const {setUser} = useActionsUser();
 
   const onClick = (e) => {
     console.log('click ', e);
-    setCurrent(e.key);
+    setPage(e.key);
   };
  
 
@@ -35,7 +39,7 @@ export const HeaderTest = () => {
   const userIsExit = () => {
     console.log('exit lk');
     setUser('');
-    setCurrent('home')
+    setPage('home')
     navigate('/')
   };
 
@@ -80,7 +84,7 @@ export const HeaderTest = () => {
         flex: 1,
         minWidth: 0,
       }}
-        onClick={onClick} selectedKeys={[current]} mode="horizontal" theme="dark" items={items} />
+        onClick={onClick} selectedKeys={[page]} mode="horizontal" theme="dark" items={items} />
         {state == "" ? null : <Button onClick={userIsExit}> <LogoutOutlined /> Выйти </Button>}
     </div>
 
