@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu, theme } from 'antd';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { HeaderTest } from './components/HeaderTest';
 import { Home } from './pages/Home';
 import { Favorites } from './pages/Favorites';
 import { Authorization } from './pages/Authorization';
+import { UserPage } from './pages/UserPage';
 
 
 
@@ -18,6 +19,8 @@ export const App = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  
 
   return (
     <BrowserRouter>
@@ -45,6 +48,7 @@ export const App = () => {
               <Route exact path='/' element={<Home />} />
               <Route exact path='/favorites' element={<Favorites />} />
               <Route exact path='/login' element={<Authorization />} />
+              <Route exact path='/user' element={<UserPage />} />
             </Routes>
 
           </div>

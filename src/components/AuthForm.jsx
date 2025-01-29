@@ -11,6 +11,9 @@ import {
   Row,
   Select,
 } from 'antd';
+import { useUser } from './hooks/useUser';
+import { useActionsUser } from './hooks/useActionsUser';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -47,8 +50,29 @@ const tailFormItemLayout = {
 
 export const AuthForm = () => {
   const [form] = Form.useForm();
+
+  const state = useUser();
+  
+  console.log(state);
+  const {setUser} = useActionsUser();
+
+  const navigate = useNavigate()
+
+
+
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    let login = values.email;
+    let user = {
+      nickname: values.nickname,
+      password: values.password,
+      favorites: []
+    }
+    localStorage.setItem(login, JSON.stringify(user));
+    localStorage.setItem('isLoggedIn', 'true');
+    setUser(login);
+    // console.log(state);
+    // navigate('/user');
   };
 
   
@@ -59,10 +83,6 @@ export const AuthForm = () => {
       form={form}
       name="register"
       onFinish={onFinish}
-      initialValues={{
-        residence: ['zhejiang', 'hangzhou', 'xihu'],
-        prefix: '86',
-      }}
       style={{
         maxWidth: 600,
       }}
