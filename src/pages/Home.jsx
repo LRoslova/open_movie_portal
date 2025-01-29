@@ -1,18 +1,10 @@
 import { Flex } from 'antd';
 import { Card, Pagination, Input, Space } from 'antd';
-// import { AudioOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
 
 const { Search } = Input;
-// const suffix = (
-//   <AudioOutlined
-//     style={{
-//       fontSize: 16,
-//       color: '#1677ff',
-//     }}
-//   />
-// );
+
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const { Meta } = Card;

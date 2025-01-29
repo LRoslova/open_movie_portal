@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {HeartOutlined, HomeOutlined, LoginOutlined, UserOutlined, LogoutOutlined} from '@ant-design/icons';
 import { Badge, Button, Menu } from 'antd';
 import {Link, useNavigate, } from 'react-router-dom'
@@ -8,15 +7,8 @@ import { useMenu } from './hooks/useMenu';
 import { useActionsMenu } from './hooks/useActionsMenu';
 
 
-
-
-
-// isLoggedIn ? 
-
 export const HeaderTest = () => {
-  // const [current, setCurrent] = useState('home');
-  // const [isLoggedIn, setLoggedIn] = useState(JSON.parse(localStorage.getItem('isLoggedIn')));
-  // console.log(isLoggedIn);
+  
   const page = useMenu();
   const {setPage} = useActionsMenu();
   
@@ -30,11 +22,7 @@ export const HeaderTest = () => {
     console.log('click ', e);
     setPage(e.key);
   };
- 
 
-  // useEffect(()=>{
-  //     navigate('/')
-  // }, [setCurrent])
 
   const userIsExit = () => {
     console.log('exit lk');
@@ -62,14 +50,7 @@ export const HeaderTest = () => {
       key: 'login',
       icon: state!="" ? <UserOutlined />: <LoginOutlined /> ,
       disabled: state!="" ? true : false
-    },
-    // {
-    //   label: (
-    //     state!="" ? <Button onClick={userIsExit}> <LogoutOutlined /> Выйти </Button> : <div></div>
-    //   ),
-    //   key: 'logout',
-    //   // icon: state!="" ?  : <div></div> ,
-    // }
+    }
   ];
 
   return (

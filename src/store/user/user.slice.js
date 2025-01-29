@@ -9,9 +9,6 @@ export const userSlice = createSlice({
         setUser: (state, {payload: userEmail}) => {
             return userEmail;
         },
-        // exitUser:(state) => {
-        //     return  '';
-        // },
     }
 })
 

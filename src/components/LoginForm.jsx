@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { useUser } from './hooks/useUser';
 import { useActionsUser } from './hooks/useActionsUser';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +13,13 @@ const onFinishFailed = (errorInfo) => {
 };
 
 export const LoginForm = () => {
+
   const user = useUser();
+  const {setUser} = useActionsUser();
+
   const page = useMenu();
   const {setPage} = useActionsMenu();
+
   const navigate = useNavigate();
 
   const onFinish = (values) => {
@@ -35,11 +39,10 @@ export const LoginForm = () => {
   }else{
     alert('Email is incorrect!')
   }
-  
-
 };
+
   console.log(user);
-  const {setUser} = useActionsUser();
+  
 
 
   return <Form

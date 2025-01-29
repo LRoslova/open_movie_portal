@@ -1,23 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import {
-  AutoComplete,
-  Button,
-  Cascader,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Row,
-  Select,
-} from 'antd';
+
+import {Button, Form, Input, Select, } from 'antd';
 import { useUser } from './hooks/useUser';
 import { useActionsUser } from './hooks/useActionsUser';
 import { useNavigate } from 'react-router-dom';
 import { useMenu } from './hooks/useMenu';
 import { useActionsMenu } from './hooks/useActionsMenu';
-
-const { Option } = Select;
 
 const formItemLayout = {
   labelCol: {
@@ -50,13 +37,15 @@ const tailFormItemLayout = {
   },
 };
 
+
 export const AuthForm = () => {
+
   const [form] = Form.useForm();
 
   const user = useUser();
-  
   console.log(user);
   const {setUser} = useActionsUser();
+  
   const page = useMenu();
   const {setPage} = useActionsMenu();
 
@@ -76,8 +65,6 @@ export const AuthForm = () => {
     alert('You are registrated!')
     setPage('home')
     navigate('/')
-    // localStorage.setItem('currentUser', login);
-    // navigate('/user')
   };
 
   
