@@ -23,14 +23,16 @@ export const App = () => {
   return (
     <BrowserRouter>
 
-      <Layout >
+      <Layout style={{
+        minHeight: '91.7vh',
+      }}>
 
         <HeaderTest />
 
         <Content
           style={{
             padding: '0 48px',
-            height: '91.7vh',
+            
           }}
         >
           <div
