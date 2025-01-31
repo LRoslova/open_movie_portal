@@ -1,78 +1,98 @@
 import { Flex } from 'antd';
-import { Card, Pagination, Input, Space, DatePicker } from 'antd';
+import { Card, Pagination, Input, Space, DatePicker, Spin, Select} from 'antd';
 import { useEffect, useState } from 'react';
-import { useGetFilmsQuery } from '../store/api/api';
+import { useGetFilmsQuery, useGetFilmsByNameQuery } from '../store/api/api';
 import { GENRES } from '../components/options';
+
+
+
 
 
 const { Search } = Input;
 
-const onSearch = (value, _e, info) => console.log(info?.source, value);
+
 
 const { Meta } = Card;
 
 
 export const Home = () => {
 
-    // const [ data, setData] = useState([{
-    //     "id": 6994027,
-    //     "name": "Проливной дождь",
-    //     "year": 2023,
-    //     "movieLength": 137,
-    //     "poster": {
-    //       "url": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/orig",
-    //       "previewUrl": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/x1000"
-    //     },
-    //     "genres": [
-    //       {
-    //         "name": "драма"
-    //       }
-    //     ],
-    //     "countries": [
-    //       {
-    //         "name": "Япония"
-    //       }
-    //     ]
-    //   }]);
-
-    // useEffect(() => {
-    //     fetch(`https://api.kinopoisk.dev/v1.4/movie?page=2&limit=12&selectFields=id&selectFields=name&selectFields=year&selectFields=movieLength&selectFields=genres&selectFields=countries&selectFields=poster&notNullFields=id&notNullFields=name&notNullFields=year&notNullFields=movieLength&notNullFields=poster.url&notNullFields=genres.name&notNullFields=countries.name&sortField=&sortType=1&type=movie&year=2020-2024`, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             'X-API-KEY': '1676QMC-5HRMB52-KGRA9G2-V1SWGC6'
-    //         }
-    //     })
-    //     .then( res => res.json())
-    //     .then(
-    //         (result) => {
-    //             setData(result.docs);
-    //             console.log(result.docs);
-    //         },
-    //         (e) => console.warn('fetch failrue', e)
-    //     )
-    // }, [])
     const onChange = (date, dateString) => {
       console.log(date, dateString);
     };
-
-    const genres = GENRES;
     
+    const genres = GENRES;
+    const [selectedItems, setSelectedItems] = useState([]);
+    const filteredGenres = genres.filter((o) => !selectedItems.includes(o));
+    
+    const [page, setPage] = useState({currPage: 1, sizePage: 10, string: ''});
+    // console.log(page);
 
-    const {isLoading, data} = useGetFilmsQuery();
-    console.log(isLoading, data);
+    const onSearch = (value, _e, info) => {
+    console.log(info?.source, value);
+    const nextPage = {currPage: page.currPage, sizePage: page.sizePage, string: value}
+    setPage(nextPage);
+
+};
+
+    const [inputValue, setInputValue] = useState("");
+    // const [debouncedValue] = useDebounce(inputValue, 3000);
+    const [debouncedValue, setDebouncedValue] = useState("");
+    console.log(debouncedValue);
+    
+      
+    const {isLoading, data, isFetching} = useGetFilmsQuery(page);
+    console.log(isLoading, data, isFetching);
+    
+    // const {isLoadingBN, dataBN, isFetchingBN} = useGetFilmsByNameQuery({size: page.sizePage, string: debouncedValue});
+    // console.log(isLoadingBN, dataBN, isFetchingBN);
+   
+    const onChangePagination = (pageValue, pageSize) => {
+            console.log(pageValue, pageSize);
+            setPage({currPage: pageValue, sizePage: pageSize, string: page.string})
+    };
+
+    const handleInputChange = (event) => {
+        const value = event.target.value;
+        setInputValue(value);
+    };
+    
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          setDebouncedValue(inputValue);
+        }, 2000);
+        return () => clearTimeout(timeoutId);
+      }, [inputValue, 2000]);
+
+      useEffect(() => {
+        setPage({currPage: 1, sizePage: 10, string: debouncedValue});
+    }, [debouncedValue]);
+    
     
 
     
     return (
         <div>
-            <Space direction="vertical">
-                <Search placeholder="input search text" onSearch={onSearch} enterButton />
+            <Space direction="vertical" >
+                <Search placeholder="Название фильма" onSearch={onSearch} enterButton />
+                <Input placeholder="Название фильма" value={inputValue} onChange={handleInputChange} />
                 <DatePicker onChange={onChange} picker="year" />
+                <Select
+                    mode="multiple"
+                    placeholder="Жанр"
+                    value={selectedItems}
+                    onChange={setSelectedItems}
+                    style={{
+                        width: '100%',
+                    }}
+                    options={filteredGenres}
+                />
             </Space>
             
-            {isLoading ? <div>Loading</div> :<Flex wrap gap="small">
-                {Array.from(
+            
+            {isLoading || isFetching ? <Spin tip="Loading" size="large">Loading...</Spin> : <div>
+            <Flex wrap gap="small">
+                {/* {Array.from(
                     data.docs,
                     (_, i) => (
                         <Card
@@ -84,14 +104,31 @@ export const Home = () => {
                             cover={<img alt="example" src= {data.docs[i].poster.url} />}
 
                         >
-                            <Meta title={data.docs[i].name} description={`Жанр: ${data.docs[i].genres[0].name} Страна: ${data.docs[i].countries[0].name}  Год: ${data.docs[i].year}`} />
+                            <Meta title={data.docs[i].name } description={`Жанр: ${data.docs[i].genres[0].name} Страна: ${data.docs[i].countries[0].name}  Год: ${data.docs[i].year}`} />
                         </Card>
                     ),
-                )}
-            </Flex>}
+                )} */}
+                {
+                    data.docs.map((item)=>
+                        <Card
+                            key={item.id}
+                            hoverable
+                            style={{
+                                width: 240,
+                            }}
+                            cover={<img alt="example" src= {item.poster.url} />}
+
+                        >
+                            <Meta title={item.name} description={`Жанр: ${item.genres[0].name} Страна: ${item.countries[0].name}  Год: ${item.year}`} />
+                        </Card>
+                    )
+                }
+            </Flex>
+            <Pagination align = 'center' defaultCurrent={data.page} total={data.total} defaultPageSize={data.limit} onChange={onChangePagination} />
+            </div>}
             
 
-            <Pagination align = 'center' defaultCurrent={6} total={500} />
+            
         </div>
         
     )
