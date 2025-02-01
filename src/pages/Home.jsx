@@ -1,5 +1,5 @@
 import { Flex } from 'antd';
-import { Card, Pagination, Input, Space, DatePicker, Spin, Select} from 'antd';
+import { Card, Pagination, Input, Space, DatePicker, Spin, Select, Modal} from 'antd';
 import { useEffect, useState } from 'react';
 import { useGetFilmsQuery, useGetFilmsByNameQuery } from '../store/api/api';
 import { GENRES } from '../components/options';
@@ -16,66 +16,62 @@ const { Meta } = Card;
 
 
 export const Home = () => {
+    const [page, setPage] = useState({currPage: 1, sizePage: 10});
+    console.log(page);
+
+    const [searchstr, setSearchstr] = useState('');
+    console.log(searchstr);
+
+    const {isLoading, data, isFetching} = useGetFilmsQuery([page, searchstr]);
+    console.log(isLoading, data, isFetching);
+    
+    const genres = GENRES;
+    const [selectedItems, setSelectedItems] = useState([]);
+    const filteredGenres = genres.filter((o) => !selectedItems.includes(o));
+
+    const [isModalOpen, setIsModalOpen] = useState({isOpen: false, data: {}});
+    // const [film, setFilm] = useState({});
+    
+    const showModal = (value) => {
+        console.log(value);
+        setIsModalOpen({isOpen: true, data: value});
+    };
+    const handleOk = () => {
+        setIsModalOpen({isOpen: false, data: {}});
+    };
+    const handleCancel = () => {
+        setIsModalOpen({isOpen: false, data: {}});
+    };
+    
 
     const onChange = (date, dateString) => {
       console.log(date, dateString);
     };
     
-    const genres = GENRES;
-    const [selectedItems, setSelectedItems] = useState([]);
-    const filteredGenres = genres.filter((o) => !selectedItems.includes(o));
-    
-    const [page, setPage] = useState({currPage: 1, sizePage: 10, string: ''});
-    // console.log(page);
-
     const onSearch = (value, _e, info) => {
     console.log(info?.source, value);
-    const nextPage = {currPage: page.currPage, sizePage: page.sizePage, string: value}
-    setPage(nextPage);
-
-};
-
-    const [inputValue, setInputValue] = useState("");
-    // const [debouncedValue] = useDebounce(inputValue, 3000);
-    const [debouncedValue, setDebouncedValue] = useState("");
-    console.log(debouncedValue);
-    
+    // const nextPage = {currPage: page.currPage, sizePage: page.sizePage, string: value}
+    setSearchstr(value);
+    };
       
-    const {isLoading, data, isFetching} = useGetFilmsQuery(page);
-    console.log(isLoading, data, isFetching);
-    
-    // const {isLoadingBN, dataBN, isFetchingBN} = useGetFilmsByNameQuery({size: page.sizePage, string: debouncedValue});
-    // console.log(isLoadingBN, dataBN, isFetchingBN);
-   
     const onChangePagination = (pageValue, pageSize) => {
             console.log(pageValue, pageSize);
-            setPage({currPage: pageValue, sizePage: pageSize, string: page.string})
+            setPage({currPage: pageValue, sizePage: pageSize})
     };
 
-    const handleInputChange = (event) => {
-        const value = event.target.value;
-        setInputValue(value);
-    };
-    
-    useEffect(() => {
-        const timeoutId = setTimeout(() => {
-          setDebouncedValue(inputValue);
-        }, 2000);
-        return () => clearTimeout(timeoutId);
-      }, [inputValue, 2000]);
+    const printGenres = (arr) => {
+        let genresName = [];
+        for(let genre of arr){
+            genresName.push(genre.name)
+        }
+        return genresName.join(' ')
+    }
 
-      useEffect(() => {
-        setPage({currPage: 1, sizePage: 10, string: debouncedValue});
-    }, [debouncedValue]);
-    
-    
-
-    
     return (
         <div>
             <Space direction="vertical" >
-                <Search placeholder="Название фильма" onSearch={onSearch} enterButton />
-                <Input placeholder="Название фильма" value={inputValue} onChange={handleInputChange} />
+                <Search placeholder="Название фильма" defaultValue={searchstr} onSearch={onSearch} enterButton />
+                
                 <DatePicker onChange={onChange} picker="year" />
                 <Select
                     mode="multiple"
@@ -92,22 +88,6 @@ export const Home = () => {
             
             {isLoading || isFetching ? <Spin tip="Loading" size="large">Loading...</Spin> : <div>
             <Flex wrap gap="small">
-                {/* {Array.from(
-                    data.docs,
-                    (_, i) => (
-                        <Card
-                            key={data.docs[i].id}
-                            hoverable
-                            style={{
-                                width: 240,
-                            }}
-                            cover={<img alt="example" src= {data.docs[i].poster.url} />}
-
-                        >
-                            <Meta title={data.docs[i].name } description={`Жанр: ${data.docs[i].genres[0].name} Страна: ${data.docs[i].countries[0].name}  Год: ${data.docs[i].year}`} />
-                        </Card>
-                    ),
-                )} */}
                 {
                     data.docs.map((item)=>
                         <Card
@@ -116,16 +96,25 @@ export const Home = () => {
                             style={{
                                 width: 240,
                             }}
-                            cover={<img alt="example" src= {item.poster.url} />}
+                            cover={<img alt="Нет ссылки на постер в БД" src= {item.poster.url} />}
+                            onClick={()=>showModal(item)}
 
                         >
-                            <Meta title={item.name} description={`Жанр: ${item.genres[0].name} Страна: ${item.countries[0].name}  Год: ${item.year}`} />
+                            <Meta title={item.name} description={`Рейтинг: ${item.rating.imdb == 0 ? 'не указан' : item.rating.imdb} `} />
+                            <p>{`Жанр: ${item.genres[0] ? printGenres(item.genres) : 'не указано'}`}</p>
+                            <p>{`Страна: ${item.countries[0] ? printGenres(item.countries) : 'не указано'}`}</p>
                         </Card>
                     )
                 }
             </Flex>
             <Pagination align = 'center' defaultCurrent={data.page} total={data.total} defaultPageSize={data.limit} onChange={onChangePagination} />
             </div>}
+
+            <Modal title={isModalOpen.data.name} open={isModalOpen.isOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Modal>
             
 
             

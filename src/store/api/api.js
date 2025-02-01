@@ -23,13 +23,13 @@ export const filmApi = createApi({
             })
         }),
         getFilms: builder.query({
-            query: (page) => ({
+            query: (arr) => ({
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     'X-API-KEY': '1676QMC-5HRMB52-KGRA9G2-V1SWGC6'
                 },
-                url: `movie${page.string==''? '' : '/search'}?page=${page.currPage}&limit=${page.sizePage}${page.string==''? baseQuery : `${baseQuery}&query=${page.string}`}`,
+                url: `movie${arr[1]==''? '' : '/search'}?page=${arr[0].currPage}&limit=${arr[0].sizePage}${arr[1]==''? baseQuery : `${baseQuery}&query=${arr[1]}`}`,
             })
         })
 
