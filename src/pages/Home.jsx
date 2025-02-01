@@ -1,17 +1,11 @@
 import { Flex } from 'antd';
 import { Card, Pagination, Input, Space, DatePicker, Spin, Select, Modal} from 'antd';
 import { useEffect, useState } from 'react';
-import { useGetFilmsQuery, useGetFilmsByNameQuery } from '../store/api/api';
+import { useGetFilmsQuery} from '../store/api/api';
 import { GENRES } from '../components/options';
 
 
-
-
-
 const { Search } = Input;
-
-
-
 const { Meta } = Card;
 
 
@@ -30,8 +24,6 @@ export const Home = () => {
     const filteredGenres = genres.filter((o) => !selectedItems.includes(o));
 
     const [isModalOpen, setIsModalOpen] = useState({isOpen: false, data: {}});
-    // const [film, setFilm] = useState({});
-    
     const showModal = (value) => {
         console.log(value);
         setIsModalOpen({isOpen: true, data: value});
@@ -50,7 +42,6 @@ export const Home = () => {
     
     const onSearch = (value, _e, info) => {
     console.log(info?.source, value);
-    // const nextPage = {currPage: page.currPage, sizePage: page.sizePage, string: value}
     setSearchstr(value);
     };
       
@@ -107,6 +98,7 @@ export const Home = () => {
                     )
                 }
             </Flex>
+
             <Pagination align = 'center' defaultCurrent={data.page} total={data.total} defaultPageSize={data.limit} onChange={onChangePagination} />
             </div>}
 
@@ -116,27 +108,7 @@ export const Home = () => {
                 <p>Some contents...</p>
             </Modal>
             
-
-            
         </div>
         
     )
 }
-
-// import const FilmFlex = () => (
-//     return (
-//         <Flex wrap gap="small">
-//             {Array.from(
-//                 {
-//                     length: 24,
-//                 },
-//                 (_, i) => (
-//                     <Button key={i} type="primary">
-//                         Button
-//                     </Button>
-//                 ),
-//             )}
-//         </Flex>
-//     )
- 
-// );
