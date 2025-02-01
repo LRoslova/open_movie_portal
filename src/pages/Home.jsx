@@ -1,38 +1,62 @@
 import { Flex } from 'antd';
-import { Card, Pagination, Input, Space, DatePicker, Spin, Select, Modal} from 'antd';
+import { Card, Pagination, Input, Space, DatePicker, Spin, Select, Modal, Button} from 'antd';
 import { useEffect, useState } from 'react';
 import { useGetFilmsQuery} from '../store/api/api';
 import { GENRES } from '../components/options';
 
+import { useActions } from '../components/hooks/useActions';
+import { useFavorites } from '../components/hooks/useFavorites';
+
 
 const { Search } = Input;
 const { Meta } = Card;
+let film = {
+    "id": 0,
+    "name": '',
+    "year": 0,
+    "movieLength": 0,
+    "poster": {
+      "url": ''
+    },
+    "genres": [],
+    'countries': [],
+    'rating': {
+        "imdb": ''
+      },
+}
 
 
 export const Home = () => {
     const [page, setPage] = useState({currPage: 1, sizePage: 10});
-    console.log(page);
+    // console.log(page);
 
     const [searchstr, setSearchstr] = useState('');
-    console.log(searchstr);
+    // console.log(searchstr);
 
     const {isLoading, data, isFetching} = useGetFilmsQuery([page, searchstr]);
-    console.log(isLoading, data, isFetching);
+    // console.log(isLoading, data, isFetching);
     
     const genres = GENRES;
     const [selectedItems, setSelectedItems] = useState([]);
     const filteredGenres = genres.filter((o) => !selectedItems.includes(o));
 
-    const [isModalOpen, setIsModalOpen] = useState({isOpen: false, data: {}});
+    const favorites = useFavorites();
+    const {toggleTofavorites} = useActions();
+    // const isExist = favorites.some(m => m.id === movie.id)
+    console.log(favorites);
+    
+
+    
+    const [isModalOpen, setIsModalOpen] = useState({isOpen: false, data: film});
     const showModal = (value) => {
-        console.log(value);
+        // console.log(value);
         setIsModalOpen({isOpen: true, data: value});
     };
     const handleOk = () => {
-        setIsModalOpen({isOpen: false, data: {}});
+        setIsModalOpen({isOpen: false, data: film});
     };
     const handleCancel = () => {
-        setIsModalOpen({isOpen: false, data: {}});
+        setIsModalOpen({isOpen: false, data: film});
     };
     
 
@@ -41,12 +65,12 @@ export const Home = () => {
     };
     
     const onSearch = (value, _e, info) => {
-    console.log(info?.source, value);
+    // console.log(info?.source, value);
     setSearchstr(value);
     };
       
     const onChangePagination = (pageValue, pageSize) => {
-            console.log(pageValue, pageSize);
+            // console.log(pageValue, pageSize);
             setPage({currPage: pageValue, sizePage: pageSize})
     };
 
@@ -92,6 +116,7 @@ export const Home = () => {
 
                         >
                             <Meta title={item.name} description={`Рейтинг: ${item.rating.imdb == 0 ? 'не указан' : item.rating.imdb} `} />
+                            <p>{`Год: ${item.year ? item.year : 'не указано'}`}</p>
                             <p>{`Жанр: ${item.genres[0] ? printGenres(item.genres) : 'не указано'}`}</p>
                             <p>{`Страна: ${item.countries[0] ? printGenres(item.countries) : 'не указано'}`}</p>
                         </Card>
@@ -103,9 +128,15 @@ export const Home = () => {
             </div>}
 
             <Modal title={isModalOpen.data.name} open={isModalOpen.isOpen} onOk={handleOk} onCancel={handleCancel}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
+                <img alt="Нет ссылки на постер в БД" src= {isModalOpen.data.poster.url ? isModalOpen.data.poster.url : ''} />
+                <p>{`Рейтинг: ${isModalOpen.data.rating.imdb == 0 ? 'не указан' : isModalOpen.data.rating.imdb}`} </p>
+                <p>{`Год: ${isModalOpen.data.year ? isModalOpen.data.year : 'не указано'}`}</p>
+                <p>{`Жанр: ${isModalOpen.data.genres[0] ? printGenres(isModalOpen.data.genres) : 'не указано'}`}</p>
+                <p>{`Страна: ${isModalOpen.data.countries[0] ? printGenres(isModalOpen.data.countries) : 'не указано'}`}</p>
+                <p>{`Продолжительность: ${isModalOpen.data.movieLength ? isModalOpen.data.movieLength + ' мин' : 'не указано'}`}</p>
+                <p>{isModalOpen.data.description == '' ? 'Описания не добавлено' : isModalOpen.data.description}</p>
+                
+                <Button onClick={() => toggleTofavorites(isModalOpen.data)}> {favorites.some(m => m.id === isModalOpen.data.id) ? 'Удалить из избранного' : 'Добавить в избранное'} </Button>
             </Modal>
             
         </div>
