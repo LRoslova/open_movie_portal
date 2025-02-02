@@ -20,6 +20,7 @@ export const Favorites = () => {
   const user = useUser();
   const {setUser} = useActionsUser();
   console.log(user);
+  
 
     // const [ data, setData] = useState([{
     //     "id": 6994027,

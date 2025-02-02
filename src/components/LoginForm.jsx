@@ -4,8 +4,9 @@ import { useActionsUser } from './hooks/useActionsUser';
 import { useNavigate } from 'react-router-dom';
 import { useMenu } from './hooks/useMenu';
 import { useActionsMenu } from './hooks/useActionsMenu';
-
-
+import { useFavorites } from './hooks/useFavorites';
+import { useActions } from './hooks/useActions';
+import { useGetFavoritesQuery} from '../store/api/api';
 
 
 const onFinishFailed = (errorInfo) => {
@@ -22,6 +23,18 @@ export const LoginForm = () => {
 
   const navigate = useNavigate();
 
+  const favorites = useFavorites();
+  const {toggleTofavorites, initialTofavorites} = useActions();
+  console.log(favorites);
+  
+
+  // const {isLoading, data, isFetching} = useGetFavoritesQuery({currPage: 1, sizePage: 10, favorites: user});
+  // console.log(isLoading, data, isFetching);
+
+
+
+
+
   const onFinish = (values) => {
   console.log('Success:', values);
   let password = values.password;
@@ -31,6 +44,7 @@ export const LoginForm = () => {
   if(localUser !== null){
     if(password == localUser.password){
       setUser(login);
+      initialTofavorites(localUser.favorites)
       setPage('home')
       navigate('/')
     }else{

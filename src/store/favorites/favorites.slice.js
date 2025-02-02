@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
 const initialState = [];
 
 
@@ -30,7 +31,11 @@ export const favoriteSlice = createSlice({
                     state.push(film)
             }
             }
+        },
+        clearFavorites: (state) => {
+            return []
         }
+
     }
 })
 

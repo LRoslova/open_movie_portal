@@ -23,7 +23,7 @@ export const HeaderTest = () => {
   const {setUser} = useActionsUser();
 
   const favorites = useFavorites();
-  const {toggleTofavorites, initialTofavorites} = useActions();
+  const {toggleTofavorites, initialTofavorites, clearFavorites} = useActions();
 
 
   const onClick = (e) => {
@@ -35,6 +35,7 @@ export const HeaderTest = () => {
   const userIsExit = () => {
     console.log('exit lk');
     setUser('');
+    clearFavorites();
     setPage('home')
     navigate('/')
   };
@@ -50,6 +51,7 @@ export const HeaderTest = () => {
       label: (<Link to='/favorites'> Избранное </Link>),
       key: 'favorites',
       icon: <Badge count={favorites.length} size='small'><HeartOutlined /></Badge>,
+      disabled: state!="" ? false : true
     },
     {
       label: (

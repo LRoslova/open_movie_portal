@@ -104,14 +104,14 @@ export const Home = () => {
             navigate('/login')
         }else{
             let localUser = JSON.parse(localStorage.getItem(user));
-        const isExist = localUser.favorites.some(m => m === movie.id);
+            const isExist = localUser.favorites.some(m => m.id === movie.id);
             if(isExist){
-                const index = localUser.favorites.findIndex(item => item === movie.id);
+                const index = localUser.favorites.findIndex(item => item.id === movie.id);
                 if(index !== -1){
                     localUser.favorites.splice(index, 1);
                 }
             }else{
-                localUser.favorites.push(movie.id)
+                localUser.favorites.push(movie)
             }
         localStorage.setItem(user, JSON.stringify(localUser));
         toggleTofavorites(movie)
