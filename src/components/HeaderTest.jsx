@@ -5,6 +5,10 @@ import { useUser } from './hooks/useUser';
 import { useActionsUser } from './hooks/useActionsUser';
 import { useMenu } from './hooks/useMenu';
 import { useActionsMenu } from './hooks/useActionsMenu';
+import { useActions } from './hooks/useActions';
+import { useFavorites } from './hooks/useFavorites';
+import { useGetFavoritesQuery} from '../store/api/api';
+import { useEffect } from 'react';
 
 
 export const HeaderTest = () => {
@@ -18,6 +22,10 @@ export const HeaderTest = () => {
   console.log(state);
   const {setUser} = useActionsUser();
 
+  const favorites = useFavorites();
+  const {toggleTofavorites, initialTofavorites, clearFavorites} = useActions();
+
+
   const onClick = (e) => {
     console.log('click ', e);
     setPage(e.key);
@@ -27,6 +35,7 @@ export const HeaderTest = () => {
   const userIsExit = () => {
     console.log('exit lk');
     setUser('');
+    clearFavorites();
     setPage('home')
     navigate('/')
   };
@@ -41,7 +50,8 @@ export const HeaderTest = () => {
     {
       label: (<Link to='/favorites'> Избранное </Link>),
       key: 'favorites',
-      icon: <Badge count={0} size='small' showZero><HeartOutlined /></Badge>,
+      icon: <Badge count={favorites.length} size='small'><HeartOutlined /></Badge>,
+      disabled: state!="" ? false : true
     },
     {
       label: (

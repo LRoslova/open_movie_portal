@@ -1,7 +1,10 @@
 import { Flex } from 'antd';
-import { Card, Pagination, Input, Space } from 'antd';
-
-import { useEffect, useState } from 'react';
+import { Card, Pagination, Input, Space, Empty } from 'antd';
+import { useUser } from '../components/hooks/useUser';
+import { useActionsUser } from '../components/hooks/useActionsUser';
+import { useActions } from '../components/hooks/useActions';
+import { useFavorites } from '../components/hooks/useFavorites';
+import { useGetFavoritesQuery} from '../store/api/api';
 
 
 const { Search } = Input;
@@ -12,54 +15,73 @@ const { Meta } = Card;
 
 export const Favorites = () => {
 
-    const [ data, setData] = useState([{
-        "id": 6994027,
-        "name": "Какой-то там дождь",
-        "year": 2023,
-        "movieLength": 137,
-        "poster": {
-          "url": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/orig",
-          "previewUrl": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/x1000"
-        },
-        "genres": [
-          {
-            "name": "драма"
-          }
-        ],
-        "countries": [
-          {
-            "name": "Япония"
-          }
-        ]
-      }]);
+  const user = useUser();
+  const {setUser} = useActionsUser();
+  console.log(user);
+  
+  const favorites = useFavorites();
+  const {toggleTofavorites, initialTofavorites} = useActions();
+  console.log(favorites);
+
+    // const [ data, setData] = useState([{
+    //     "id": 6994027,
+    //     "name": "Какой-то там дождь",
+    //     "year": 2023,
+    //     "movieLength": 137,
+    //     "poster": {
+    //       "url": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/orig",
+    //       "previewUrl": "https://image.openmoviedb.com/kinopoisk-images/10812607/d3e47b48-2ad4-4e7f-97f2-bcff5062ba6c/x1000"
+    //     },
+    //     "genres": [
+    //       {
+    //         "name": "драма"
+    //       }
+    //     ],
+    //     "countries": [
+    //       {
+    //         "name": "Япония"
+    //       }
+    //     ]
+    //   }]);
+    const printGenres = (arr) => {
+      let genresName = [];
+      for(let genre of arr){
+          genresName.push(genre.name)
+      }
+      return genresName.join(' ')
+  }
     
     return (
-        <div>
-            <Space direction="vertical">
-                <Search placeholder="input search text" onSearch={onSearch} enterButton />
-            </Space>
-            
-            <Flex wrap gap="small">
-                {Array.from(
-                    data,
-                    (_, i) => (
-                        <Card
-                            key={data[i].id}
-                            hoverable
-                            style={{
-                                width: 240,
-                            }}
-                            cover={<img alt="example" src= {data[i].poster.url} />}
+      <div>
+        {user == '' ? <><p>Войдите или зарегистрируйтесь</p><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></> : 
+        !favorites[0] ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+        <Flex wrap gap="small">
+            {
+                favorites.map((item)=>
+                    <Card
+                        key={item.id}
+                        hoverable
+                        style={{
+                            width: 240,
+                        }}
+                        cover={<img alt="Нет ссылки на постер в БД" src= {item.poster.url} />}
+                        // onClick={()=>showModal(item)}
 
-                        >
-                            <Meta title={data[i].name} description={`Жанр: ${data[i].genres[0].name} Страна: ${data[i].countries[0].name}  Год: ${data[i].year}`} />
-                        </Card>
-                    ),
-                )}
-            </Flex>
+                    >
+                        <Meta title={item.name} description={`Рейтинг: ${item.rating.imdb == 0 ? 'не указан' : item.rating.imdb} `} />
+                        <p>{`Год: ${item.year ? item.year : 'не указано'}`}</p>
+                        <p>{`Жанр: ${item.genres[0] ? printGenres(item.genres) : 'не указано'}`}</p>
+                        <p>{`Страна: ${item.countries[0] ? printGenres(item.countries) : 'не указано'}`}</p>
+                    </Card>
+                )
+            }
+        </Flex>
 
-            <Pagination align = 'center' defaultCurrent={6} total={500} />
+        {/* <Pagination align = 'center' defaultCurrent={data.page} total={data.total} defaultPageSize={data.limit} onChange={onChangePagination} /> */}
         </div>
+        }
+      </div>
+        
         
     )
 }
