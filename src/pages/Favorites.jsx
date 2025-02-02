@@ -6,8 +6,6 @@ import { useActions } from '../components/hooks/useActions';
 import { useFavorites } from '../components/hooks/useFavorites';
 import { useGetFavoritesQuery} from '../store/api/api';
 
-import { useEffect, useState } from 'react';
-
 
 const { Search } = Input;
 const onSearch = (value, _e, info) => console.log(info?.source, value);
@@ -21,6 +19,9 @@ export const Favorites = () => {
   const {setUser} = useActionsUser();
   console.log(user);
   
+  const favorites = useFavorites();
+  const {toggleTofavorites, initialTofavorites} = useActions();
+  console.log(favorites);
 
     // const [ data, setData] = useState([{
     //     "id": 6994027,
@@ -42,32 +43,43 @@ export const Favorites = () => {
     //       }
     //     ]
     //   }]);
+    const printGenres = (arr) => {
+      let genresName = [];
+      for(let genre of arr){
+          genresName.push(genre.name)
+      }
+      return genresName.join(' ')
+  }
     
     return (
       <div>
-        {/* {state == '' ? <><p>Войдите или зарегистрируйтесь</p><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></> : 
-        <div>
-          <Flex wrap gap="small">
-            {Array.from(
-              data,
-              (_, i) => (
-                <Card
-                  key={data[i].id}
-                  hoverable
-                  style={{
-                    width: 240,
-                  }}
-                  cover={<img alt="example" src={data[i].poster.url} />}
+        {user == '' ? <><p>Войдите или зарегистрируйтесь</p><Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /></> : 
+        !favorites[0] ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
+        <Flex wrap gap="small">
+            {
+                favorites.map((item)=>
+                    <Card
+                        key={item.id}
+                        hoverable
+                        style={{
+                            width: 240,
+                        }}
+                        cover={<img alt="Нет ссылки на постер в БД" src= {item.poster.url} />}
+                        // onClick={()=>showModal(item)}
 
-                >
-                  <Meta title={data[i].name} description={`Жанр: ${data[i].genres[0].name} Страна: ${data[i].countries[0].name}  Год: ${data[i].year}`} />
-                </Card>
-              ),
-            )}
-          </Flex>
+                    >
+                        <Meta title={item.name} description={`Рейтинг: ${item.rating.imdb == 0 ? 'не указан' : item.rating.imdb} `} />
+                        <p>{`Год: ${item.year ? item.year : 'не указано'}`}</p>
+                        <p>{`Жанр: ${item.genres[0] ? printGenres(item.genres) : 'не указано'}`}</p>
+                        <p>{`Страна: ${item.countries[0] ? printGenres(item.countries) : 'не указано'}`}</p>
+                    </Card>
+                )
+            }
+        </Flex>
 
-          <Pagination align='center' defaultCurrent={6} total={500} />
-        </div>} */}
+        {/* <Pagination align = 'center' defaultCurrent={data.page} total={data.total} defaultPageSize={data.limit} onChange={onChangePagination} /> */}
+        </div>
+        }
       </div>
         
         
