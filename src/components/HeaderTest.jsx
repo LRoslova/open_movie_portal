@@ -7,6 +7,8 @@ import { useMenu } from './hooks/useMenu';
 import { useActionsMenu } from './hooks/useActionsMenu';
 import { useActions } from './hooks/useActions';
 import { useFavorites } from './hooks/useFavorites';
+import { useGetFavoritesQuery} from '../store/api/api';
+import { useEffect } from 'react';
 
 
 export const HeaderTest = () => {
@@ -21,7 +23,8 @@ export const HeaderTest = () => {
   const {setUser} = useActionsUser();
 
   const favorites = useFavorites();
-  const {toggleTofavorites} = useActions();
+  const {toggleTofavorites, initialTofavorites} = useActions();
+
 
   const onClick = (e) => {
     console.log('click ', e);

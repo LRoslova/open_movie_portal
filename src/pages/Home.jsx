@@ -6,6 +6,11 @@ import { GENRES } from '../components/options';
 
 import { useActions } from '../components/hooks/useActions';
 import { useFavorites } from '../components/hooks/useFavorites';
+import { useUser } from '../components/hooks/useUser';
+import { useActionsUser } from '../components/hooks/useActionsUser';
+import { useNavigate } from 'react-router-dom';
+import { useMenu } from '../components/hooks/useMenu';
+import { useActionsMenu } from '../components/hooks/useActionsMenu';
 
 
 const { Search } = Input;
@@ -27,24 +32,23 @@ let film = {
 
 
 export const Home = () => {
-    const [page, setPage] = useState({currPage: 1, sizePage: 10});
+    const [page, setPagePag] = useState({currPage: 1, sizePage: 10});
     // console.log(page);
 
     const [searchstr, setSearchstr] = useState('');
     // console.log(searchstr);
 
     const {isLoading, data, isFetching} = useGetFilmsQuery([page, searchstr]);
-    // console.log(isLoading, data, isFetching);
+    console.log(isLoading, data, isFetching);
     
     const genres = GENRES;
     const [selectedItems, setSelectedItems] = useState([]);
     const filteredGenres = genres.filter((o) => !selectedItems.includes(o));
 
-    const favorites = useFavorites();
-    const {toggleTofavorites} = useActions();
-    // const isExist = favorites.some(m => m.id === movie.id)
-    console.log(favorites);
     
+    
+     // const {isLoading, data, isFetching} = useGetFavoritesQuery({currPage: 1, sizePage: 10, favorites: state});
+  // console.log(isLoading, data, isFetching);
 
     
     const [isModalOpen, setIsModalOpen] = useState({isOpen: false, data: film});
@@ -71,7 +75,7 @@ export const Home = () => {
       
     const onChangePagination = (pageValue, pageSize) => {
             // console.log(pageValue, pageSize);
-            setPage({currPage: pageValue, sizePage: pageSize})
+            setPagePag({currPage: pageValue, sizePage: pageSize})
     };
 
     const printGenres = (arr) => {
@@ -80,6 +84,38 @@ export const Home = () => {
             genresName.push(genre.name)
         }
         return genresName.join(' ')
+    }
+
+    const user = useUser();
+    const {setUser} = useActionsUser();
+
+    const favorites = useFavorites();
+    const {toggleTofavorites, initialTofavorites} = useActions();
+    console.log(favorites);
+
+    const menu = useMenu();
+    const {setPage} = useActionsMenu();
+
+    const navigate = useNavigate(); 
+
+    const setFavorite = (movie) => {
+        if(user ==""){
+            setPage('login')
+            navigate('/login')
+        }else{
+            let localUser = JSON.parse(localStorage.getItem(user));
+        const isExist = localUser.favorites.some(m => m === movie.id);
+            if(isExist){
+                const index = localUser.favorites.findIndex(item => item === movie.id);
+                if(index !== -1){
+                    localUser.favorites.splice(index, 1);
+                }
+            }else{
+                localUser.favorites.push(movie.id)
+            }
+        localStorage.setItem(user, JSON.stringify(localUser));
+        toggleTofavorites(movie)
+        }
     }
 
     return (
@@ -136,7 +172,7 @@ export const Home = () => {
                 <p>{`Продолжительность: ${isModalOpen.data.movieLength ? isModalOpen.data.movieLength + ' мин' : 'не указано'}`}</p>
                 <p>{isModalOpen.data.description == '' ? 'Описания не добавлено' : isModalOpen.data.description}</p>
                 
-                <Button onClick={() => toggleTofavorites(isModalOpen.data)}> {favorites.some(m => m.id === isModalOpen.data.id) ? 'Удалить из избранного' : 'Добавить в избранное'} </Button>
+                <Button onClick={() => setFavorite(isModalOpen.data)}> {favorites.some(m => m.id === isModalOpen.data.id) ? 'Удалить из избранного' : 'Добавить в избранное'} </Button>
             </Modal>
             
         </div>
