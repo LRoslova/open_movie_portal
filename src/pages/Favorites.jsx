@@ -5,6 +5,7 @@ import { useActionsUser } from '../components/hooks/useActionsUser';
 import { useActions } from '../components/hooks/useActions';
 import { useFavorites } from '../components/hooks/useFavorites';
 import { useGetFavoritesQuery} from '../store/api/api';
+import { useEffect, useState } from 'react';
 
 
 const { Search } = Input;
@@ -50,6 +51,20 @@ export const Favorites = () => {
       }
       return genresName.join(' ')
   }
+  const [page, setPagePag] = useState({currPage: 1, sizePage: 10});
+  const onChangePagination = (pageValue, pageSize) => {
+    // console.log(pageValue, pageSize);
+    setPagePag({currPage: pageValue, sizePage: pageSize})
+};
+
+// useEffect(()=>{
+//   let start = (page.currPage-1)*page.sizePage;
+//   let end = page.currPage*page.sizePage;
+//   console.log(start, end);
+  
+//   let dataF = favorites.slice(start, end )
+//   console.table(dataF);
+// }, [])
     
     return (
       <div>
@@ -57,7 +72,7 @@ export const Favorites = () => {
         !favorites[0] ? <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> : <div>
         <Flex wrap gap="small">
             {
-                favorites.map((item)=>
+                favorites.slice((page.currPage-1)*page.sizePage, page.currPage*page.sizePage).map((item)=>
                     <Card
                         key={item.id}
                         hoverable
@@ -77,7 +92,7 @@ export const Favorites = () => {
             }
         </Flex>
 
-        {/* <Pagination align = 'center' defaultCurrent={data.page} total={data.total} defaultPageSize={data.limit} onChange={onChangePagination} /> */}
+        <Pagination align = 'center' defaultCurrent={page.currPage} total={favorites.length} defaultPageSize={page.pageSize} onChange={onChangePagination} />
         </div>
         }
       </div>
